@@ -30,20 +30,44 @@ public class List {
 
     /** GIVE Adds a CharData object with the given character to the beginning of this list. */
     public void addFirst(char chr) {
-        // Your code goes here
+        CharData newCD = new CharData(chr);
+        Node newNode = new Node(newCD);
+        newNode.next= this.first;
+        this.first = newNode;
+        size++;
     }
     
     /** GIVE Textual representation of this list. */
     public String toString() {
-        // Your code goes here
-        return "";
+     if (size == 0) {
+        return "()";
+     }
+     Node current = first;
+     StringBuilder sb = new StringBuilder("(");
+     while (current != null) {
+        sb.append(current.cp);
+        if (current.next != null) {
+         sb.append(" "); // Only add space if there is a next element
+         }
+        current = current.next;
+     }
+     sb.append(")");
+     return sb.toString();
     }
 
     /** Returns the index of the first CharData object in this list
      *  that has the same chr value as the given char,
      *  or -1 if there is no such object in this list. */
     public int indexOf(char chr) {
-        // Your code goes here
+        Node current = this.first;
+        int index = 0; 
+        while (current!= null) {
+            if (current.cp.equals(chr)) {
+                return index;
+            }
+            current=current.next;
+            index++;
+        }
         return -1;
     }
 
@@ -51,14 +75,36 @@ public class List {
      *  increments its counter. Otherwise, adds a new CharData object with the
      *  given chr to the beginning of this list. */
     public void update(char chr) {
-        // Your code goes here
+        if (this.indexOf(chr)==-1) {
+            this.addFirst(chr);
+        }else{
+            CharData cd = this.get(this.indexOf(chr));
+            cd.count++;
+        }
     }
 
     /** GIVE If the given character exists in one of the CharData objects
      *  in this list, removes this CharData object from the list and returns
      *  true. Otherwise, returns false. */
     public boolean remove(char chr) {
-        // Your code goes here
+         if(this.indexOf(chr)==-1){ return false; }
+         if (this.first.cp.equals(chr)) {
+            this.first = first.next;
+            size--;
+            return true;
+         }
+         Node prev = first;
+         Node current = first.next;
+         while (current!=null) {
+            if (current.cp.equals(chr)) {
+                prev.next = current.next;
+                size--;
+                return true;
+            } else{
+                prev=current;
+                current = current.next;
+            }
+         }
         return false;
     }
 
@@ -66,8 +112,14 @@ public class List {
      *  If the index is negative or is greater than the size of this list, 
      *  throws an IndexOutOfBoundsException. */
     public CharData get(int index) {
-        // Your code goes here
-        return null;
+        if (index<0 || index>this.size-1) {
+            throw new IndexOutOfBoundsException(index + "is an not in the list");
+        }
+        Node current = this.first;
+        for (int i = 0; i < index; i++) {
+            current = current.next;
+        }
+        return current.cp;
     }
 
     /** Returns an array of CharData objects, containing all the CharData objects in this list. */
